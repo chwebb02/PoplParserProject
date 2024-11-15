@@ -26,6 +26,42 @@ class PythonListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PythonParser#conditional.
+    def enterConditional(self, ctx:PythonParser.ConditionalContext):
+        pass
+
+    # Exit a parse tree produced by PythonParser#conditional.
+    def exitConditional(self, ctx:PythonParser.ConditionalContext):
+        pass
+
+
+    # Enter a parse tree produced by PythonParser#cond_elif.
+    def enterCond_elif(self, ctx:PythonParser.Cond_elifContext):
+        pass
+
+    # Exit a parse tree produced by PythonParser#cond_elif.
+    def exitCond_elif(self, ctx:PythonParser.Cond_elifContext):
+        pass
+
+
+    # Enter a parse tree produced by PythonParser#cond_else.
+    def enterCond_else(self, ctx:PythonParser.Cond_elseContext):
+        pass
+
+    # Exit a parse tree produced by PythonParser#cond_else.
+    def exitCond_else(self, ctx:PythonParser.Cond_elseContext):
+        pass
+
+
+    # Enter a parse tree produced by PythonParser#boolean_expr.
+    def enterBoolean_expr(self, ctx:PythonParser.Boolean_exprContext):
+        pass
+
+    # Exit a parse tree produced by PythonParser#boolean_expr.
+    def exitBoolean_expr(self, ctx:PythonParser.Boolean_exprContext):
+        pass
+
+
     # Enter a parse tree produced by PythonParser#value.
     def enterValue(self, ctx:PythonParser.ValueContext):
         pass
