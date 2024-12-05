@@ -11,4 +11,4 @@ Antlr4 is required (project was build with version 4.9.2)
 To run the program, run the python file parser.py and supply a filepath as an argument for the parser to parse.  It will then print out the parse tree and the success status of the parsing operation.
 
 ## Link or video
-Todo
+![](https://youtu.be/9TkfDmWo3SE)
