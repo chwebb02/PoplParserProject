@@ -1,51 +1,47 @@
 grammar Python;
 
-prog: (conditional | assignment)* | EOF;
-
-assignment: (IDENTIFIER  ASSIGN_OP  value);
-
-IF: 'if';
-
-ELIF: 'elif';
-
-ELSE: 'else';
-
-conditional: IF boolean_expr ':' ('\t' assignment)* cond_elif* cond_else?;
-
-cond_elif: ELIF boolean_expr ':' ('\t' assignment)*;
-
-cond_else: ELSE ('\t' assignment)*;
-
-boolean_expr: boolean_expr AND_OR boolean_expr | NOT boolean_expr | expr COMPARE_OP expr | expr | '(' boolean_expr ')';
-
-COMPARE_OP: '>' | '<' | '>' '=' | '<' '=' | '=' '=' | '!' '=';
-
-AND_OR: 'a''n''d' | 'o''r';
-
-NOT: 'n''o''t';
-
-WS: [ \r\n]+ -> skip;
-
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-
-ASSIGN_OP: '=' | '+''=' | '-''=' | '*''=' | '/''=';
-
+prog: statement* | EOF;
+statement: NEWLINE | conditional | loop | assignment;
+assignment: IDENTIFIER  ASSIGN_OP  value;
 value: LITERAL | expr | IDENTIFIER;
+expr: LITERAL | IDENTIFIER | expr ARITH_OP expr | '(' expr ')';
+conditional: cond_if (NEWLINE INDENT* cond_elif)* (NEWLINE INDENT* cond_else)?;
+cond_if: IF boolean_expr ':' NEWLINE then;
+cond_elif: ELIF boolean_expr ':' NEWLINE then;
+cond_else: ELSE ':' NEWLINE then;
+then: indented_statement (NEWLINE indented_statement)*;
+indented_statement: INDENT+ statement;
+boolean_expr: NOT? expr (COMPARE_OP expr)? (AND_OR boolean_expr)? | L_PAREN boolean_expr R_PAREN (AND_OR boolean_expr)?;
+loop: (while_loop | for_loop) ':' NEWLINE then;
+while_loop: WHILE boolean_expr;
+for_loop: FOR IDENTIFIER IN iterator;
+iterator: range_func | LIST_LIT | IDENTIFIER;
+range_func: RANGE '(' (IDENTIFIER | LITERAL) ',' (IDENTIFIER | LITERAL) ')';
 
+COMMENT: ('#' ~[\n\r]* | '\'\'\'' .*? '\'\'\'') -> skip;
+IF: 'if';
+ELIF: 'elif';
+ELSE: 'else';
+NOT: 'not';
+AND_OR: 'and' | 'or';
+WHILE: 'while';
+FOR: 'for';
+IN: 'in';
+RANGE: 'range';
+NEWLINE: '\r\n' | [\n\r];
+WS: ' '+ -> skip;
+ASSIGN_OP: '=' | '+=' | '-=' | '*=' | '/=';
 LITERAL: STR_LIT | INT_LIT | FLOAT_LIT | LIST_LIT | BOOLEAN_LIT;
-
-STR_LIT: '"' [a-zA-Z0-9 ]* '"' | '\'' [a-zA-Z0-9]* '\'';
-
+STR_LIT: '"' [a-zA-Z0-9 '_.!?]* '"' | '\'' [a-zA-Z0-9 '_.!?]* '\'';
 INT_LIT: [0-9]+ | '-' [0-9]+;
-
 FLOAT_LIT: [0-9]+ '.' [0-9]+ | '-' [0-9]+ '.' [0-9]+;
-
 LIST_LIT: '['  LIST_ELEMENT*  ']';
-
 LIST_ELEMENT: LITERAL (',' WS LIST_ELEMENT)*;
-
-BOOLEAN_LIT: 'T''r''u''e' | 'F''a''l''s''e';
-
-expr: LITERAL | IDENTIFIER | expr  ARITH_OP  expr;
-
+BOOLEAN_LIT: 'True' | 'False';
 ARITH_OP: '+' | '-' | '*' | '/' | '%';
+INDENT: '\t' | ' '+;
+COMPARE_OP: '>' | '<' | '>=' | '<=' | '==' | '!=';
+COLON: ':';
+L_PAREN: '(';
+R_PAREN: ')';
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
